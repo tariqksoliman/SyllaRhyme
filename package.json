@@ -1,0 +1,19 @@
+{
+  "name": "syllarhyme",
+  "version": "1.0.0",
+  "description": "Counts syllables and rhymes words.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tariqksoliman/SyllaRhyme.git"
+  },
+  "author": "Tariq Soliman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tariqksoliman/SyllaRhyme/issues"
+  },
+  "homepage": "https://github.com/tariqksoliman/SyllaRhyme#readme"
+}
