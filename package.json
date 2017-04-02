@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Counts syllables and rhymes words.",
   "main": "index.js",
+  "files": [
+    "dictionaries"
+  ],
   "scripts": {
     "test": "mocha"
   },

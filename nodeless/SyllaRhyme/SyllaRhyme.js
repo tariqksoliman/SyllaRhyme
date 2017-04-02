@@ -1,6 +1,8 @@
-var fs = require( 'fs' );
+var SyllaRhyme = function( callback ) {
 
-module.exports = function( callback ) {
+	//You may need to fix these paths
+	var dictPath = 'SyllaRhyme/dictionaries/cmudict-0.7b.txt';
+    var flipdictPath = 'SyllaRhyme/dictionaries/flipdict.txt';
       
     syllarhyme = {
         ipaMappings: {
@@ -217,7 +219,6 @@ module.exports = function( callback ) {
             var match = phonesToMatch( phonemesList[0] );
             var rhymeArr = [];
             var matchesBegun = false;
-
             for( var i = 0; i < this.flipdict.length; i++ ) {
                 for( var m = 0; m < match.length; m++ ) {
                     if( this.flipdict[i][m] != match[m] ) {
@@ -284,9 +285,6 @@ module.exports = function( callback ) {
     };
 
     //init
-    var dict = 'dictionaries/cmudict-0.7b.txt';
-    var flipdict = 'dictionaries/flipdict.txt';
-
     var dictsLoaded = 0;
     function dictLoaded() {
         dictsLoaded++;
@@ -295,28 +293,32 @@ module.exports = function( callback ) {
         }
     }
 
-    readDictFile( dict, function( lines ) {
+    readDictFile( dictPath, function( lines ) {
         syllarhyme.dict = lines;
-        dictLoaded();
+		dictLoaded();
     } );
-    readDictFile( flipdict, function( lines ) {
+    readDictFile( flipdictPath, function( lines ) {
         syllarhyme.flipdict = lines;
-        dictLoaded();
+		dictLoaded();
     } );
 
     return syllarhyme;
 
     function readDictFile( url, cb ) {
         var lines;
-        fs.readFile( url, function( err, data ) {
-            if( err ) {
-                return console.error( err );
+        var xhr = new XMLHttpRequest();
+        xhr.open( 'GET', url, true );
+        xhr.onreadystatechange = function () {
+            if( xhr.readyState === 4 ) {
+                if( xhr.status === 200 || xhr.status == 0 ) {
+                    lines = xhr.responseText.split( '\n' );
+                    for( var i = 0; i < lines.length; i++ ) {
+                        lines[i] = lines[i].split( ' ' );
+                    }
+                    return typeof cb === "function" ? cb( lines ) : void 0;
+                }
             }
-            lines = data.toString().split( '\n' );
-            for( var i = 0; i < lines.length; i++ ) {
-                lines[i] = lines[i].split( ' ' );
-            }
-            return typeof cb === "function" ? cb( lines ) : void 0;
-        });
+        }
+        xhr.send( null );
     }
 }

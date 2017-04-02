@@ -19,7 +19,7 @@ describe( 'SyllaRhyme', function() {
         });
     });
     describe( '#_wordToPhonemes( "evaluation" )', function() {
-        it( 'should return two pronounciations', function() {
+        it( 'should return two pronunciations', function() {
             assert.equal( 2, syllarhyme._wordToPhonemes( 'evaluation' ).length );
         });
     });
@@ -37,7 +37,7 @@ describe( 'SyllaRhyme', function() {
     });
     describe( '#rhymes( "test" )', function() {
         it( 'should not return itself', function() {
-            assert.deepEqual( -1, syllarhyme.rhymes( 'test' ).indexOf( 'test' ) );
+            assert.equal( -1, syllarhyme.rhymes( 'test' ).indexOf( 'test' ) );
         });
     });
     describe( '#rhymes( "bulb" )', function() {
@@ -51,20 +51,64 @@ describe( 'SyllaRhyme', function() {
         });
     });
 
-    //pronounciation
-    describe( '#pronounciation( "test" )[0]', function() {
+    //rhymesWith
+    describe( '#rhymesWith( "test", "best" )', function() {
+        it( 'should return true', function() {
+            assert.equal( true, syllarhyme.rhymesWith( 'test', 'best' ) );
+        });
+    });
+    describe( '#rhymesWith( "best", "test" )', function() {
+        it( 'should return true', function() {
+            assert.equal( true, syllarhyme.rhymesWith( 'best', 'test' ) );
+        });
+    });
+    describe( '#rhymesWith( "test", "failed" )', function() {
+        it( 'should return false', function() {
+            assert.equal( false, syllarhyme.rhymesWith( 'test', 'failed' ) );
+        });
+    });
+    describe( '#rhymesWith( "test", "" )', function() {
+        it( 'should return false', function() {
+            assert.equal( false, syllarhyme.rhymesWith( 'test', '' ) );
+        });
+    });
+
+    //syllables
+    describe( '#syllables( "test" )', function() {
+        it( 'should return 1', function() {
+            assert.equal( 1, syllarhyme.syllables( 'test' ) );
+        });
+    });
+    describe( '#syllables( "resplendent" )', function() {
+        it( 'should return 3', function() {
+            assert.equal( 3, syllarhyme.syllables( 'resplendent' ) );
+        });
+    });
+    describe( '#syllables( "" )', function() {
+        it( 'should return 0', function() {
+            assert.equal( 0, syllarhyme.syllables( '' ) );
+        });
+    });
+
+    //pronunciation
+    describe( '#pronunciation( "test" )[0]', function() {
         it( 'should return "T EH1 S T"', function() {
-            assert.equal( 'T EH1 S T', syllarhyme.pronounciation( 'test' )[0] );
+            assert.equal( 'T EH1 S T', syllarhyme.pronunciation( 'test' )[0] );
         });
     });
-    describe( '#pronounciation( "evaluation" )', function() {
-        it( 'should return two pronounciations', function() {
-            assert.equal( 2, syllarhyme.pronounciation( 'evaluation' ).length );
+    describe( '#pronunciation( "evaluation" )', function() {
+        it( 'should return two pronunciations', function() {
+            assert.equal( 2, syllarhyme.pronunciation( 'evaluation' ).length );
         });
     });
-    describe( '#pronounciation( "testnonsense" )', function() {
+    describe( '#pronunciation( "testnonsense" )', function() {
         it( 'should return []', function() {
-            assert.deepEqual( [], syllarhyme.pronounciation( 'testnonsense' ) );
+            assert.deepEqual( [], syllarhyme.pronunciation( 'testnonsense' ) );
+        });
+    });
+    describe( '#pronunciation( "curious", "ipa" )[0]', function() {
+        it( 'should return "k j ʊ r i ə s"', function() {
+            assert.equal( 'k j ʊ r i ə s', syllarhyme.pronunciation( 'curious', 'ipa' )[0] );
         });
     });
 });
