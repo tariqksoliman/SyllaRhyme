@@ -50,6 +50,11 @@ describe( 'SyllaRhyme', function() {
             assert.equal( true, syllarhyme.rhymes( 'trunk' ).indexOf( 'shunk' ) > -1 );
         });
     });
+    describe( '#rhymes( "testnonsense" )', function() {
+        it( 'should return []', function() {
+            assert.deepEqual( [], syllarhyme.rhymes( 'testnonsense' ) );
+        });
+    });
 
     //rhymesWith
     describe( '#rhymesWith( "test", "best" )', function() {
@@ -72,6 +77,11 @@ describe( 'SyllaRhyme', function() {
             assert.equal( false, syllarhyme.rhymesWith( 'test', '' ) );
         });
     });
+    describe( '#rhymesWith( "testnonsense", "morenonsense" )', function() {
+        it( 'should return false', function() {
+            assert.equal( false, syllarhyme._wordToPhonemes( 'testnonsense', 'morenonsense' ) );
+        });
+    });
 
     //syllables
     describe( '#syllables( "test" )', function() {
@@ -84,9 +94,19 @@ describe( 'SyllaRhyme', function() {
             assert.equal( 3, syllarhyme.syllables( 'resplendent' ) );
         });
     });
+    describe( '#syllables( "How many syllables does this sentence have?" )', function() {
+        it( 'should return 11', function() {
+            assert.equal( 11, syllarhyme.syllables( 'How many syllables does this sentence have?' ) );
+        });
+    });
     describe( '#syllables( "" )', function() {
         it( 'should return 0', function() {
             assert.equal( 0, syllarhyme.syllables( '' ) );
+        });
+    });
+    describe( '#syllables( "testnonsense" )', function() {
+        it( 'should return 0', function() {
+            assert.deepEqual( 0, syllarhyme.syllables( 'testnonsense' ) );
         });
     });
 
@@ -111,4 +131,10 @@ describe( 'SyllaRhyme', function() {
             assert.equal( 'k j ʊ r i ə s', syllarhyme.pronunciation( 'curious', 'ipa' )[0] );
         });
     });
+    describe( '#pronunciation( "testnonsense" )', function() {
+        it( 'should return []', function() {
+            assert.deepEqual( [], syllarhyme.pronunciation( 'testnonsense' ) );
+        });
+    });
+
 });

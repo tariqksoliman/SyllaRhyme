@@ -1,6 +1,9 @@
 var fs = require( 'fs' );
 
 module.exports = function( callback ) {
+	
+    var dictPath = __dirname + '/dictionaries/cmudict-0.7b.txt';
+    var flipdictPath = __dirname + '/dictionaries/flipdict.txt';
       
     syllarhyme = {
         ipaMappings: {
@@ -197,8 +200,13 @@ module.exports = function( callback ) {
             var phoneArr = [];
             var num = 0;
             var id = '';
+			// Scan dict linearly for the series:
+			// word
+			// word(1)
+			// ...
+			// word(n)
+			// not word
             for( var i = 0; i < this.dict.length; i++ ) {
-
                 if( this.dict[i][0] == word + id ) {
                     phoneArr.push( this.dict[i].slice(2) );
                     num++;
@@ -212,12 +220,21 @@ module.exports = function( callback ) {
             return phoneArr;
         },
         rhymes: function( word ) {
-            word = word.toLowerCase();
-            var phonemesList = this._wordToPhonemes( word );
-            var match = phonesToMatch( phonemesList[0] );
             var rhymeArr = [];
+	
+            word = word.toLowerCase();
+
+            var phonemesList = this._wordToPhonemes( word );
+			if( phonemesList.length == 0 ) return rhymeArr;
+
+            var match = phonesToMatch( phonemesList[0] );
             var matchesBegun = false;
 
+			//Scan flipdict linearly for the series:
+			// match
+			// ...
+			// match
+			// not match
             for( var i = 0; i < this.flipdict.length; i++ ) {
                 for( var m = 0; m < match.length; m++ ) {
                     if( this.flipdict[i][m] != match[m] ) {
@@ -255,12 +272,20 @@ module.exports = function( callback ) {
             return this.rhymes( word1 ).indexOf( word2.toLowerCase() ) > -1 ||
                    word1.toLowerCase() == word2.toLowerCase();
         },
-        syllables: function( word ) {
-            var phonemes = this._wordToPhonemes( word )[0];
+        syllables: function( str ) {
             var syllablesCount = 0;
-            for( var i = 0; i < phonemes.length; i++ ) {
-                if( (/^[aeiou]/i).test( phonemes[i] ) ) syllablesCount++;
-            }
+			str = str.replace(/[,.?!();]/g, "");
+			var words = str.split( ' ' );
+			
+			for( var i = 0; i < words.length; i++ ) {
+				var phonemes = this._wordToPhonemes( words[i] )[0];
+				if( phonemes ) { //the word is found
+					//Count how many voweled phones
+					for( var j = 0; j < phonemes.length; j++ ) {
+						if( (/^[aeiou]/i).test( phonemes[j] ) ) syllablesCount++;
+					}
+				}
+			}
             return syllablesCount;
         },
         //optional: type ('arpabet'(default) or 'ipa')
@@ -284,9 +309,6 @@ module.exports = function( callback ) {
     };
 
     //init
-    var dict = 'dictionaries/cmudict-0.7b.txt';
-    var flipdict = 'dictionaries/flipdict.txt';
-
     var dictsLoaded = 0;
     function dictLoaded() {
         dictsLoaded++;
@@ -295,11 +317,11 @@ module.exports = function( callback ) {
         }
     }
 
-    readDictFile( dict, function( lines ) {
+    readDictFile( dictPath, function( lines ) {
         syllarhyme.dict = lines;
         dictLoaded();
     } );
-    readDictFile( flipdict, function( lines ) {
+    readDictFile( flipdictPath, function( lines ) {
         syllarhyme.flipdict = lines;
         dictLoaded();
     } );
